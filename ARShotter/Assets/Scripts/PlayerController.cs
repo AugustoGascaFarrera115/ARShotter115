@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -33,26 +31,74 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MoveThePlayer();
+        //MoveThePlayer();
 
-        chararacterController.Move(player_Move);
+        //chararacterController.Move(player_Move);
+
+        CalculateHeight();
+        CheckIfFinishedMovement();
 
     }
 
+    bool IsGrounded()
+    {
+        //if(collisionFlags == CollisionFlags.CollidedBelow)
+        //{
+        //    return true;
+
+        //    //code here will not be executed when return statement is executed
+
+        //}
+
+        //return false;
+
+        return collisionFlags == CollisionFlags.CollidedBelow ? true : false;
+    }
+
+
+    void CalculateHeight()
+    {
+        if (IsGrounded())
+        {
+            height = 0.0f;
+        }
+        else
+        {
+            height -= gravity * Time.deltaTime;
+        }
+    }
+
+    void CheckIfFinishedMovement()
+    {
+        if (!finished_Movement)
+        {
+            if (!anim.IsInTransition(0) && !anim.GetCurrentAnimatorStateInfo(0).IsName("Stand") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+            {
+                finished_Movement = true;
+            }
+        }
+        else
+        {
+            MoveThePlayer();
+            player_Move.y = height * Time.deltaTime;
+            collisionFlags = chararacterController.Move(player_Move);
+        }
+    }
 
 
     void MoveThePlayer()
     {
 
         //touch.phase == TouchPhase.Began
-
-        if (Input.touchCount > 0)
+        //Input.touchCount > 0
+        if (Input.GetMouseButtonDown(0))
         {
 
-            touch = Input.GetTouch(0);
+            //touch = Input.GetTouch(0);
             //calculate where is the position in the space once click event
             //touch.position
-            Ray ray = Camera.main.ScreenPointToRay(touch.position);
+            //touch.position
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
 
@@ -62,7 +108,7 @@ public class PlayerController : MonoBehaviour
                 {
                     player_toPointDistance = Vector3.Distance(transform.position, hit.point);
 
-                    if (player_toPointDistance >= 1.0f)
+                    if (player_toPointDistance >= 0.1f)
                     {
                         canMove = true;
                         target_Position = hit.point;
@@ -85,12 +131,12 @@ public class PlayerController : MonoBehaviour
 
             Quaternion playerRot = Quaternion.LookRotation(target_temporal);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, playerRot, 15.0f * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, playerRot, 10.0f * Time.deltaTime);
 
             player_Move = transform.forward * moveSpeed * Time.deltaTime;
 
 
-            
+
             if (Vector3.Distance(transform.position, target_Position) <= 0.1f)
             {
                 canMove = false;
