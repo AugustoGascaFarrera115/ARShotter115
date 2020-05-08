@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
 
             Quaternion playerRot = Quaternion.LookRotation(target_temporal);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, playerRot, 10.0f * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, playerRot, 8.0f * Time.deltaTime);
 
             player_Move = transform.forward * moveSpeed * Time.deltaTime;
 
@@ -147,6 +147,32 @@ public class PlayerController : MonoBehaviour
         {
             player_Move.Set(0f, 0f, 0f);
             anim.SetFloat("Walk", 0f);
+        }
+    }
+
+    public bool FinishedMovement
+    {
+
+        get
+        {
+            return finished_Movement;
+        }
+        set
+        {
+            finished_Movement = value;
+        }
+    }
+
+
+    public Vector3 TargetPosition
+    {
+        get
+        {
+            return target_Position;
+        }
+        set
+        {
+            target_Position = value;
         }
     }
 
