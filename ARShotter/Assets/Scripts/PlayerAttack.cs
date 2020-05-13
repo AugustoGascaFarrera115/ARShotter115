@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PlayerAttack : MonoBehaviour
@@ -18,12 +19,16 @@ public class PlayerAttack : MonoBehaviour
     private PlayerController playerMove;
 
 
+
     // Start is called before the first frame update
     void Awake()
     {
         animator = GetComponent<Animator>();
         playerMove = GetComponent<PlayerController>();
+        
 
+
+  
     }
 
     // Update is called once per frame
@@ -38,13 +43,26 @@ public class PlayerAttack : MonoBehaviour
             canAttack = false;
         }
 
+        ActivateMovement();
+        //btn.enabled = false;
+
+        //btn.onClick.AddListener(() => { ActivateMovement(); });
+    }
+
+
+
+    public void ActivateMovement()
+    {
         CheckToFade();
         CheckInput();
-
     }
+
 
     public  void CheckInput()
     {
+
+       
+
         if (animator.GetInteger("Atk") == 0)
         {
             playerMove.FinishedMovement = false;
@@ -58,6 +76,8 @@ public class PlayerAttack : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+
+
             playerMove.TargetPosition = transform.position;
 
 
@@ -68,18 +88,20 @@ public class PlayerAttack : MonoBehaviour
                 animator.SetInteger("Atk", 1);
             }
 
-        }
-        else if (Input.GetMouseButton(1))
+
+        } else if (Input.GetMouseButton(1))
         {
+            print("you have pressed succesfukky");
+
             if (playerMove.FinishedMovement && fadeImages[1] != 1 && canAttack)
             {
                 fadeImages[1] = 1;
                 animator.SetInteger("Atk", 2);
             }
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-           if(playerMove.FinishedMovement && fadeImages[2] != 1 && canAttack)
+            if (playerMove.FinishedMovement && fadeImages[2] != 1 && canAttack)
             {
                 fadeImages[2] = 1;
                 animator.SetInteger("Atk", 6);
@@ -91,25 +113,26 @@ public class PlayerAttack : MonoBehaviour
         }
 
 
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-        //    Vector3 targetPosition = Vector3.zero;
+            //if (Input.GetKey(KeyCode.Space))
+            //{
+            //    Vector3 targetPosition = Vector3.zero;
 
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    RaycastHit rayHit;
+            //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //    RaycastHit rayHit;
 
-        //    if (Physics.Raycast(ray, out rayHit))
-        //    {
-        //        targetPosition = new Vector3(rayHit.point.x, transform.position.y, rayHit.point.z);
-        //    }
-
-
-        //    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), 15f * Time.deltaTime);
-
-        //}
+            //    if (Physics.Raycast(ray, out rayHit))
+            //    {
+            //        targetPosition = new Vector3(rayHit.point.x, transform.position.y, rayHit.point.z);
+            //    }
 
 
-    } //check input
+            //    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), 15f * Time.deltaTime);
+
+            //}
+
+
+     } //check input
+
 
 
 
